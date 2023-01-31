@@ -1,6 +1,5 @@
 package tech.ada.banco.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +11,13 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/saque")
-@RequiredArgsConstructor
 public class SaqueController {
 
     private final Saque saque;
+
+    public SaqueController(Saque saque) {
+        this.saque = saque;
+    }
 
     @PostMapping("{conta}")
     public BigDecimal createSaque(@PathVariable int conta, @RequestParam BigDecimal valor) {

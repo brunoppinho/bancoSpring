@@ -1,6 +1,7 @@
 package tech.ada.banco.model;
 
 import tech.ada.banco.exceptions.SaldoInsuficienteException;
+import tech.ada.banco.exceptions.ValorInvalidoException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class Conta {
 
     public void saque(BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("Valor menor que zero!");
+            throw new ValorInvalidoException();
         }
 
         if (valor.compareTo(saldo) > 0) {

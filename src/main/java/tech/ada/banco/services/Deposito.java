@@ -1,9 +1,11 @@
 package tech.ada.banco.services;
 
+import org.springframework.stereotype.Service;
 import tech.ada.banco.model.Conta;
 
 import java.math.BigDecimal;
 
+@Service
 public class Deposito {
 
     public BigDecimal executar(int numeroConta, BigDecimal valor) {
