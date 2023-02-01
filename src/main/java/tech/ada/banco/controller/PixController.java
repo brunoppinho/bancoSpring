@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.ada.banco.services.Pix;
-import tech.ada.banco.services.Saque;
 
 import java.math.BigDecimal;
 
@@ -20,7 +19,7 @@ public class PixController {
 
     @PostMapping("{conta}")
     public BigDecimal createPixTransaction(@PathVariable int conta, @RequestParam int destino,
-                                     @RequestParam BigDecimal valor) {
+                                           @RequestParam BigDecimal valor) {
         return pix.executar(conta, destino, valor);
     }
 }

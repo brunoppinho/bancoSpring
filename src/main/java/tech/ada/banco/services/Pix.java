@@ -2,7 +2,9 @@ package tech.ada.banco.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import tech.ada.banco.exceptions.ResourceNotFoundException;
 import tech.ada.banco.model.Conta;
+import tech.ada.banco.repository.ContaRepository;
 
 import java.math.BigDecimal;
 
@@ -10,9 +12,15 @@ import java.math.BigDecimal;
 @Slf4j
 public class Pix {
 
+    private final ContaRepository repository;
+
+    public Pix(ContaRepository repository) {
+        this.repository = repository;
+    }
+
     public BigDecimal executar(int contaOrigem, int contaDestino, BigDecimal valor) {
-        Conta origem = Conta.obtemContaPeloNumero(contaOrigem);
-        Conta destino = Conta.obtemContaPeloNumero(contaDestino);
+        Conta origem = repository.findContaByNumeroConta(contaOrigem).orElseThrow(ResourceNotFoundException::new);
+        Conta destino = repository.findContaByNumeroConta(contaDestino).orElseThrow(ResourceNotFoundException::new);
 
         if (valor.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Operação não foi realizada pois o valor da transação é negativo.");

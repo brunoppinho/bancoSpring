@@ -1,61 +1,62 @@
 package tech.ada.banco.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import tech.ada.banco.exceptions.ValorInvalidoException;
+
 import java.time.LocalDate;
 
+@Setter
+@Getter
+@Entity
+@Table(name = "PESSOA")
 public class Pessoa {
 
+    @Id
+    @SequenceGenerator(name = "pessoaSequenceGenerator", sequenceName = "PESSOA_SQ", initialValue = 100)
+    @GeneratedValue(generator = "pessoaSequenceGenerator", strategy = GenerationType.SEQUENCE)
+    @Column(updatable = false)
+    private Long id;
+
+    @Column(name = "DATA_NASCIMENTO")
     private LocalDate dataNascimento;
-    private Documento documento;
+
+    @Column(name = "CPF")
+    private String cpf;
+
+    @Column(name = "TELEFONE")
     private String telefone;
+
+    @Column(name = "NOME")
     private String nome;
 
-    public Pessoa(String nome, Documento documento, LocalDate dataNascimento) {
+    public Pessoa(String nome, String cpf, LocalDate dataNascimento) {
         setDataNascimento(dataNascimento);
-        this.documento = documento;
+        this.cpf = cpf;
         this.nome = nome;
     }
 
-    public Pessoa(String nome, Documento documento, String dataNascimento) {
-        this(nome, documento, LocalDate.parse(dataNascimento));
+    protected Pessoa() {
+
     }
 
     public String toString() {
-        return "Nome: " + nome + " telefone: " + telefone + " e documento: " + documento.getValor();
-    }
-
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
+        return "Nome: " + nome + " telefone: " + telefone + " e cpf: " + cpf;
     }
 
     public void setDataNascimento(LocalDate dataNascimento) {
         if (dataNascimento.plusYears(18).isAfter(LocalDate.now())) {
-            throw new RuntimeException("Data inválida!");
+            throw new ValorInvalidoException();
         } else {
             this.dataNascimento = dataNascimento;
         }
     }
 
-    public Documento getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(Documento documento) {
-        this.documento = documento;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }

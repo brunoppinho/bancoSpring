@@ -1,23 +1,28 @@
 package tech.ada.banco.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import tech.ada.banco.exceptions.ResourceNotFoundException;
 import tech.ada.banco.model.Conta;
+import tech.ada.banco.repository.ContaRepository;
 
 import java.math.BigDecimal;
 
 @Service
+@Slf4j
 public class Deposito {
 
-    public BigDecimal executar(int numeroConta, BigDecimal valor) {
-        Conta conta = Conta.obtemContaPeloNumero(numeroConta);
+    private final ContaRepository repository;
 
-        if (conta != null) {
-            // Etapa 4
-            conta.deposito(valor);
-            System.out.println("O saldo da conta é de: R$" + conta.getSaldo());
-        } else {
-            System.out.println("Conta não pode ser nula. Tente novamente.");
-        }
+    public Deposito(ContaRepository repository) {
+        this.repository = repository;
+    }
+
+    public BigDecimal executar(int numeroConta, BigDecimal valor) {
+        Conta conta = repository.findContaByNumeroConta(numeroConta).orElseThrow(ResourceNotFoundException::new);
+        conta.deposito(valor);
+        log.info("O saldo da conta é de: R$ {}", conta.getSaldo());
+        repository.save(conta);
         return conta.getSaldo();
     }
 }

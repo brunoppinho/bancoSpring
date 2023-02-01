@@ -1,39 +1,59 @@
 package tech.ada.banco.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 import tech.ada.banco.exceptions.SaldoInsuficienteException;
 import tech.ada.banco.exceptions.ValorInvalidoException;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
+@Entity
+@Table(name = "CONTA")
+@Getter
+@Setter
 public class Conta {
 
-    private static Map<Integer, Conta> contas = new HashMap<>();
-    private final ModalidadeConta tipo;
-    protected BigDecimal saldo;
+    @Id
+    @SequenceGenerator(name = "contaSequenceGenerator", sequenceName = "CONTA_SQ", initialValue = 10000)
+    @GeneratedValue(generator = "contaSequenceGenerator", strategy = GenerationType.SEQUENCE)
+    @Column(updatable = false)
     private int numeroConta;
+
+    @Column(name = "TIPO")
+    @Enumerated(EnumType.STRING)
+    private ModalidadeConta tipo;
+
+    @Column(name = "SALDO")
+    protected BigDecimal saldo;
+
+    @Column(name = "AGENCIA")
     private final String agencia;
-    private final Pessoa titular;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "PESSOA_ID", referencedColumnName = "ID")
+    private Pessoa titular;
 
     public Conta(ModalidadeConta tipo, Pessoa titular) {
+        this();
         this.tipo = tipo;
         this.titular = titular;
+    }
+
+    protected Conta() {
         agencia = "0001";
         saldo = BigDecimal.ZERO;
-        escolheNumeroConta();
-        contas.put(numeroConta, this);
-    }
-
-    public static Conta obtemContaPeloNumero(int numeroConta) {
-        return contas.get(numeroConta);
-    }
-
-    private void escolheNumeroConta() {
-        numeroConta = new Random().nextInt(99999);
     }
 
     public ModalidadeConta getTipo() {
@@ -66,18 +86,6 @@ public class Conta {
 
     public int getNumeroConta() {
         return numeroConta;
-    }
-
-    public String getAgencia() {
-        return agencia;
-    }
-
-    public Pessoa getTitular() {
-        return titular;
-    }
-
-    public static List<Conta> getContas() {
-        return new ArrayList<>(contas.values());
     }
 
 }
