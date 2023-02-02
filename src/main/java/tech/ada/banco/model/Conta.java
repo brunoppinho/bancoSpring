@@ -66,7 +66,7 @@ public class Conta {
 
     public void deposito(BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("Valor menor que zero!");
+            throw new ValorInvalidoException();
         }
 
         saldo = saldo.add(valor);

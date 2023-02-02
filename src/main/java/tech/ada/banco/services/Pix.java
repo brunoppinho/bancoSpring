@@ -27,7 +27,9 @@ public class Pix {
         }
 
         origem.saque(valor);
+        repository.save(origem);
         destino.deposito(valor);
+        repository.save(destino);
         log.info("Operação realizada com sucesso.");
         return origem.getSaldo();
     }

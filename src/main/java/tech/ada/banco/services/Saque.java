@@ -22,6 +22,7 @@ public final class Saque {
         Conta conta = repository.findContaByNumeroConta(numeroConta).orElseThrow(ResourceNotFoundException::new);
 
         conta.saque(valor);
+        repository.save(conta);
         log.info("O saldo resultante após o saque é de R$ {}", conta.getSaldo());
         return conta.getSaldo();
     }
