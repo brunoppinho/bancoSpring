@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException() {
-        super("Limite acima do saldo disponível!");
+        super("Recurso não encontrado.");
     }
 }
