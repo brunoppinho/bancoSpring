@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import tech.ada.banco.model.Conta;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,8 +46,8 @@ class SaqueControllerTest extends BaseContaTest {
                         .andReturn().getResponse().getContentAsString();
 
         contaBase = obtemContaDoBanco(contaBase);
-        assertEquals("0", response);
-        assertEquals(BigDecimal.ZERO, contaBase.getSaldo());
+        assertEquals("0.00", response);
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), contaBase.getSaldo());
     }
 
     @Test
@@ -98,8 +99,8 @@ class SaqueControllerTest extends BaseContaTest {
                         .andReturn().getResponse().getContentAsString();
 
         contaBase = obtemContaDoBanco(contaBase);
-        assertEquals("7", response);
-        assertEquals(BigDecimal.valueOf(7), contaBase.getSaldo());
+        assertEquals("7.00", response);
+        assertEquals(BigDecimal.valueOf(7).setScale(2, RoundingMode.HALF_UP), contaBase.getSaldo());
     }
 
     @Test
@@ -115,8 +116,8 @@ class SaqueControllerTest extends BaseContaTest {
                         .andReturn().getResponse().getContentAsString();
 
         contaBase = obtemContaDoBanco(contaBase);
-        assertEquals("6.3", response);
-        assertEquals(BigDecimal.valueOf(6.3), contaBase.getSaldo());
+        assertEquals("6.30", response);
+        assertEquals(BigDecimal.valueOf(6.3).setScale(2, RoundingMode.HALF_UP), contaBase.getSaldo());
     }
 
     @Test
